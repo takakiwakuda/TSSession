@@ -9,7 +9,7 @@ schema: 2.0.0
 
 ## SYNOPSIS
 
-Disconnects a Remote Desktop Services session.
+Disconnects a logged on user from a Remote Desktop Services session.
 
 ## SYNTAX
 
@@ -27,7 +27,7 @@ Disconnect-TSSession -Session <TerminalServicesSession> [-Force] [-WhatIf] [-Con
 
 ## DESCRIPTION
 
-The `Disconnect-TSSession` cmdlet disconnects a Remote Desktop Services session.
+The `Disconnect-TSSession` cmdlet disconnects a logged on user from a Remote Desktop Services session.
 
 ## EXAMPLES
 
@@ -37,7 +37,7 @@ The `Disconnect-TSSession` cmdlet disconnects a Remote Desktop Services session.
 PS C:\> Disconnect-TSSession -SessionId 5 -ServerName RDSessionHost
 ```
 
-This example disconnects a session with id 5 on the server `RDSessionHost`.
+This example disconnects a user session with ID 5 on the server `RDSessionHost`.
 
 ## PARAMETERS
 

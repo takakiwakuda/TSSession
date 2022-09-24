@@ -9,7 +9,7 @@ schema: 2.0.0
 
 ## SYNOPSIS
 
-Gets Remote Desktop Services sessions.
+Gets a list of all sessions on a Remote Desktop Session Host server.
 
 ## SYNTAX
 
@@ -19,7 +19,7 @@ Get-TSSession [[-ServerName] <String>] [<CommonParameters>]
 
 ## DESCRIPTION
 
-The `Get-TSSession` cmdlet gets Remote Desktop Services sessions.
+The `Get-TSSession` cmdlet gets a list of all sessions on a Remote Desktop Session Host server.
 
 ## EXAMPLES
 
@@ -29,7 +29,7 @@ The `Get-TSSession` cmdlet gets Remote Desktop Services sessions.
 PS C:\> Get-TSSession
 ```
 
-This example gets Remote Desktop Services sessions on the local machine.
+This example gets a list of all sessions on the local machine.
 
 ## PARAMETERS
 

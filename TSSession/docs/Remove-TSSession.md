@@ -37,7 +37,7 @@ The `Remove-TSSession` cmdlet logs off a Remote Desktop Services session.
 PS C:\> Remove-TSSession -SessionId 5 -ServerName RDSessionHost
 ```
 
-This example logs off a session with id 5 on the server `RDSessionHost`.
+This example logs off a session with ID 5 on the server `RDSessionHost`.
 
 ## PARAMETERS
 

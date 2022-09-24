@@ -6,11 +6,11 @@
       <command:verb>Disconnect</command:verb>
       <command:noun>TSSession</command:noun>
       <maml:description>
-        <maml:para>Disconnects a Remote Desktop Services session.</maml:para>
+        <maml:para>Disconnects a logged on user from a Remote Desktop Services session.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>The `Disconnect-TSSession` cmdlet disconnects a Remote Desktop Services session.</maml:para>
+      <maml:para>The `Disconnect-TSSession` cmdlet disconnects a logged on user from a Remote Desktop Services session.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -226,7 +226,7 @@
         <maml:title>-------------------------- Example 1 --------------------------</maml:title>
         <dev:code>PS C:\&gt; Disconnect-TSSession -SessionId 5 -ServerName RDSessionHost</dev:code>
         <dev:remarks>
-          <maml:para>This example disconnects a session with id 5 on the server `RDSessionHost`.</maml:para>
+          <maml:para>This example disconnects a user session with ID 5 on the server `RDSessionHost`.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -251,11 +251,11 @@
       <command:verb>Get</command:verb>
       <command:noun>TSSession</command:noun>
       <maml:description>
-        <maml:para>Gets Remote Desktop Services sessions.</maml:para>
+        <maml:para>Gets a list of all sessions on a Remote Desktop Session Host server.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>The `Get-TSSession` cmdlet gets Remote Desktop Services sessions.</maml:para>
+      <maml:para>The `Get-TSSession` cmdlet gets a list of all sessions on a Remote Desktop Session Host server.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -318,7 +318,7 @@
         <maml:title>-------------------------- Example 1 --------------------------</maml:title>
         <dev:code>PS C:\&gt; Get-TSSession</dev:code>
         <dev:remarks>
-          <maml:para>This example gets Remote Desktop Services sessions on the local machine.</maml:para>
+          <maml:para>This example gets a list of all sessions on the local machine.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
@@ -563,7 +563,7 @@
         <maml:title>-------------------------- Example 1 --------------------------</maml:title>
         <dev:code>PS C:\&gt; Remove-TSSession -SessionId 5 -ServerName RDSessionHost</dev:code>
         <dev:remarks>
-          <maml:para>This example logs off a session with id 5 on the server `RDSessionHost`.</maml:para>
+          <maml:para>This example logs off a session with ID 5 on the server `RDSessionHost`.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>
