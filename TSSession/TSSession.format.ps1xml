@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+  <ViewDefinitions>
+  <!-- Table view for TerminalServicesSession -->
+    <View>
+      <Name>TerminalServicesSessionTableView</Name>
+      <ViewSelectedBy>
+        <TypeName>TSSession.TerminalServicesSession</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Width>18</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Width>18</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Width>9</Width>
+            <Alignment>Right</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Width>12</Width>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>IdleTime</Label>
+            <Width>12</Width>
+            <Alignment>Right</Alignment>
+          </TableColumnHeader>
+          <TableColumnHeader />
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>UserName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>SessionName</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>SessionId</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>SessionState</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>
+                  if ($_.IdleTime.TotalMinutes -lt 1) {
+                    return "."
+                  }
+                  return $_.IdleTime.ToString("d\.hh\:mm")
+                </ScriptBlock>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>LogonTime</PropertyName>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+
+  <!-- List view for TerminalServicesSession -->
+    <View>
+      <Name>TerminalServicesSessionListView</Name>
+      <ViewSelectedBy>
+        <TypeName>TSSession.TerminalServicesSession</TypeName>
+      </ViewSelectedBy>
+      <ListControl>
+        <ListEntries>
+          <ListEntry>
+            <ListItems>
+              <ListItem>
+                <PropertyName>SessionId</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>SessionName</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>SessionState</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>DomainName</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>UserName</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>ServerName</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>IdleTime</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>ConnectTime</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>DisconnectTime</PropertyName>
+              </ListItem>
+              <ListItem>
+                <PropertyName>LogonTime</PropertyName>
+              </ListItem>
+            </ListItems>
+          </ListEntry>
+        </ListEntries>
+      </ListControl>
+    </View>
+  </ViewDefinitions>
+</Configuration>
