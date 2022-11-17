@@ -4,7 +4,7 @@ TSSession module provides cmdlets for working with Remote Desktop Services sessi
 
 ## TSSession
 
-|                                                                |                                                                      |
+| Name                                                           | Description                                                          |
 | -------------------------------------------------------------- | -------------------------------------------------------------------- |
 | [Disconnect-TSSession](TSSession/docs/Disconnect-TSSession.md) | Disconnects a logged on user from a Remote Desktop Services session. |
 | [Get-TSSession](TSSession/docs/Get-TSSession.md)               | Gets a list of all sessions on a Remote Desktop Session Host server. |

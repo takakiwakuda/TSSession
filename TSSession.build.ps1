@@ -7,16 +7,16 @@ param (
     [Parameter()]
     [ValidateSet("Debug", "Release")]
     [string]
-    $Configuration = "Debug",
+    $Configuration = (property Configuration Release),
 
     [Parameter()]
-    [ValidateSet("net462", "net6.0")]
+    [ValidateSet("net462", "net7.0")]
     [string]
     $Framework
 )
 
 if ($Framework.Length -eq 0) {
-    $Framework = if ($PSEdition -eq "Core") { "net6.0" }else { "net462" }
+    $Framework = if ($PSEdition -eq "Core") { "net7.0" }else { "net462" }
 }
 
 <#
@@ -58,7 +58,7 @@ task BuildModule BuildTSSession, {
 #>
 task Install BuildModule, {
     $destination = switch ($Framework) {
-        "net6.0" {
+        "net7.0" {
             "$HOME\Documents\PowerShell\Modules"
         }
         "net462" {
@@ -86,7 +86,7 @@ task Test Install, {
     $command = "& { Invoke-Pester -Path '$PSScriptRoot\test' -Output Detailed }"
 
     switch ($Framework) {
-        "net6.0" {
+        "net7.0" {
             exec { pwsh -nop -c $command }
         }
         "net462" {
