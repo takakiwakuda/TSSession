@@ -35,7 +35,6 @@ public sealed class TerminalServer : IDisposable
         get
         {
             ThrowIfDisposed();
-
             return _handle;
         }
     }
@@ -43,7 +42,17 @@ public sealed class TerminalServer : IDisposable
     /// <summary>
     /// Retrieves the name of the server.
     /// </summary>
-    public string Name => _serverName;
+    /// <exception cref="ObjectDisposedException">
+    /// The server object has already been dispoased.
+    /// </exception>
+    public string Name
+    {
+        get
+        {
+            ThrowIfDisposed();
+            return _serverName;
+        }
+    }
 
     private readonly bool _isRemoteServer;
     private readonly string _serverName;
@@ -56,11 +65,19 @@ public sealed class TerminalServer : IDisposable
     /// <exception cref="ArgumentNullException">
     /// <paramref name="serverName"/> is <see langword="null"/>.
     /// </exception>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="serverName"/> is empty.
+    /// </exception>
     public TerminalServer(string serverName)
     {
         if (serverName is null)
         {
             throw new ArgumentNullException(nameof(serverName));
+        }
+
+        if (serverName.Length == 0)
+        {
+            throw new ArgumentException("The value cannot be an empty string.", nameof(serverName));
         }
 
         _handle = Wtsapi32.WTSOpenServerEx(serverName);
