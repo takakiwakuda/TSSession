@@ -13,10 +13,6 @@ namespace TSSession;
 /// </summary>
 public sealed class TerminalServer : IDisposable
 {
-    private const int ERROR_FILE_NOT_FOUND = 2;
-    private const int ERROR_ACCESS_DENIED = 5;
-    private const int ERROR_CTX_WINSTATION_NOT_FOUND = 7022;
-
     private static readonly Lazy<TerminalServer> s_current = new(() => new());
 
     /// <summary>
@@ -331,11 +327,11 @@ public sealed class TerminalServer : IDisposable
 
         switch (error)
         {
-            case ERROR_FILE_NOT_FOUND:
-            case ERROR_CTX_WINSTATION_NOT_FOUND:
-                throw new IOException(StringResources.SessionNotFound);
+            case Errors.ERROR_FILE_NOT_FOUND:
+            case Errors.ERROR_CTX_WINSTATION_NOT_FOUND:
+                throw new IOException(StringResources.SessionNotFound, error);
 
-            case ERROR_ACCESS_DENIED:
+            case Errors.ERROR_ACCESS_DENIED:
                 throw new UnauthorizedAccessException(StringResources.UnauthorizedRDServicesAccess);
 
             default:
