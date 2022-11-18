@@ -235,8 +235,12 @@ public sealed class TerminalServer : IDisposable
     /// Returns a string representing the server name.
     /// </summary>
     /// <returns>A string representing the server name.</returns>
+    /// <exception cref="ObjectDisposedException">
+    /// The server object has already been dispoased.
+    /// </exception>
     public override string ToString()
     {
+        ThrowIfDisposed();
         return _serverName;
     }
 
