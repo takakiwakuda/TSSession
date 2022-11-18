@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -177,7 +178,7 @@ public sealed class TerminalServer : IDisposable
     {
         ThrowIfDisposed();
 
-        if (!Wtsapi32.WTSEnumerateSessionsEx(_handle, 1, 0, out IntPtr ptr, out int count))
+        if (!Wtsapi32.WTSEnumerateSessionsEx(_handle, 1, 0, out nint ptr, out int count))
         {
             ThrowWin32Error();
         }
@@ -187,21 +188,19 @@ public sealed class TerminalServer : IDisposable
         try
         {
             int size = Marshal.SizeOf<Wtsapi32.WTS_SESSION_INFO_1>();
-            long current = ptr.ToInt64();
+            nint current = ptr;
             Wtsapi32.WTS_SESSION_INFO_1 sessionInfo;
-            int sessionId;
 
             for (int i = 0; i < count; i++)
             {
-                sessionInfo = Marshal.PtrToStructure<Wtsapi32.WTS_SESSION_INFO_1>((IntPtr)current);
-                sessionId = sessionInfo.SessionId;
-                sessions.Add(new(_serverName, _isRemoteServer, GetSessionInformation(sessionId)));
+                sessionInfo = Marshal.PtrToStructure<Wtsapi32.WTS_SESSION_INFO_1>(current);
+                sessions.Add(new(_serverName, _isRemoteServer, GetSessionInformation(sessionInfo.SessionId)));
                 current += size;
             }
         }
         finally
         {
-            Wtsapi32.WTSFreeMemoryEx(Wtsapi32.WTS_TYPE_CLASS.WTSTypeSessionInfoLevel1, ptr, count);
+            Debug.Assert(Wtsapi32.WTSFreeMemoryEx(Wtsapi32.WTS_TYPE_CLASS.WTSTypeSessionInfoLevel1, ptr, count));
         }
 
         return sessions.ToArray();
@@ -286,7 +285,7 @@ public sealed class TerminalServer : IDisposable
     /// </exception>
     private T QuerySessionInformation<T>(int sessionId, Wtsapi32.WTS_INFO_CLASS infoClass) where T : struct
     {
-        if (!Wtsapi32.WTSQuerySessionInformation(_handle, sessionId, infoClass, out IntPtr ptr, out uint _))
+        if (!Wtsapi32.WTSQuerySessionInformation(_handle, sessionId, infoClass, out nint ptr, out uint _))
         {
             ThrowWin32Error();
         }
