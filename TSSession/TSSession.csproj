@@ -6,6 +6,10 @@
     <FileVersion>1.0.0</FileVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net7.0'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
   <ItemGroup Condition="'$(TargetFramework)' == 'net7.0'">
     <PackageReference Include="System.Management.Automation" Version="7.3.0" />
   </ItemGroup>

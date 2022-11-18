@@ -36,16 +36,7 @@ public sealed class SafeTerminalServerHandle : SafeHandle
     /// <inheritdoc/>
     protected override bool ReleaseHandle()
     {
-        WTSCloseServer(handle);
+        Wtsapi32.WTSCloseServer(handle);
         return true;
     }
-
-    /// <summary>
-    /// Closes an open handle to a Remote Desktop Session Host (RD Session Host) server.
-    /// </summary>
-    /// <param name="hServer">
-    /// A handle to an RD Session Host server opened by a call to the WTSOpenServer or WTSOpenServerEx function.
-    /// </param>
-    [DllImport("wtsapi32.dll", SetLastError = false)]
-    private static extern void WTSCloseServer(IntPtr hServer);
 }

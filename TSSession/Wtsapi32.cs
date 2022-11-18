@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace TSSession;
 
-internal static class Wtsapi32
+internal static partial class Wtsapi32
 {
     internal enum WTS_CONNECTSTATE_CLASS
     {
@@ -104,46 +104,4 @@ internal static class Wtsapi32
     private const int WINSTATIONNAME_LENGTH = 32;
 
     internal static SafeTerminalServerHandle WTS_CURRENT_SERVER_HANDLE = new(IntPtr.Zero, false);
-
-    [DllImport(nameof(Wtsapi32), CharSet = CharSet.Unicode, SetLastError = true)]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    internal static extern bool WTSDisconnectSession(
-        SafeTerminalServerHandle hServer,
-        int SessionId,
-        [MarshalAs(UnmanagedType.Bool)] bool bWait);
-
-    [DllImport(nameof(Wtsapi32), CharSet = CharSet.Unicode, SetLastError = true)]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    internal static extern bool WTSEnumerateSessionsEx(
-        SafeTerminalServerHandle hServer,
-        in uint pLevel,
-        uint Filter,
-        out IntPtr ppSessionInfo,
-        out int pCount);
-
-    [DllImport(nameof(Wtsapi32), CharSet = CharSet.Unicode, SetLastError = false)]
-    internal static extern void WTSFreeMemory(IntPtr pMemory);
-
-    [DllImport(nameof(Wtsapi32), CharSet = CharSet.Unicode, SetLastError = true)]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    internal static extern bool WTSFreeMemoryEx(WTS_TYPE_CLASS WTSTypeClass, IntPtr pMemory, int NumberOfEntries);
-
-    [DllImport(nameof(Wtsapi32), CharSet = CharSet.Unicode, SetLastError = true)]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    internal static extern bool WTSLogoffSession(
-        SafeTerminalServerHandle hServer,
-        int SessionId,
-        [MarshalAs(UnmanagedType.Bool)] bool bWait);
-
-    [DllImport(nameof(Wtsapi32), CharSet = CharSet.Unicode, SetLastError = false)]
-    internal static extern SafeTerminalServerHandle WTSOpenServerEx(string pServerName);
-
-    [DllImport(nameof(Wtsapi32), CharSet = CharSet.Unicode, SetLastError = true)]
-    [return: MarshalAs(UnmanagedType.Bool)]
-    internal static extern bool WTSQuerySessionInformation(
-        SafeTerminalServerHandle hServer,
-        int SessionId,
-        WTS_INFO_CLASS WTSInfoClass,
-        out IntPtr ppBuffer,
-        out uint pBytesReturned);
 }
