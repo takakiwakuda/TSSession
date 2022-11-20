@@ -27,7 +27,7 @@ task BuildTSSession @{
     Inputs  = Get-ChildItem -Path TSSession\*.cs, TSSession\TSSession.csproj
     Outputs = "TSSession\bin\$Configuration\$Framework\TSSession.dll"
     Jobs    = {
-        exec { dotnet publish --no-self-contained -c $Configuration -f $Framework TSSession }
+        exec { dotnet publish -c $Configuration -f $Framework TSSession }
     }
 }
 
@@ -70,8 +70,7 @@ task Install BuildModule, {
         if (Test-Path -LiteralPath "$destination\TSSession" -PathType Container) {
             Remove-Item -LiteralPath "$destination\TSSession" -Recurse
         }
-    }
-    else {
+    } else {
         $null = New-Item -Path $destination -ItemType Directory
     }
 
@@ -80,10 +79,15 @@ task Install BuildModule, {
 
 <#
 .SYNOPSIS
-    Test TSSession module.
+    Run TSSession module tests.
 #>
-task Test Install, {
-    $command = "& { Invoke-Pester -Path '$PSScriptRoot\test' -Output Detailed }"
+task RunModuleTest BuildModule, {
+    $command = @"
+    & {
+        Import-Module -Name '$PSScriptRoot\out\$Configuration\$Framework\TSSession';
+        Invoke-Pester -Path '$PSScriptRoot\test' -Output Detailed
+    }
+"@
 
     switch ($Framework) {
         "net7.0" {
@@ -99,4 +103,4 @@ task Test Install, {
 .SYNOPSIS
     Run default tasks.
 #>
-task . Test
+task . RunModuleTest
