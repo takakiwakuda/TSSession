@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
 
@@ -310,7 +309,7 @@ public sealed class TerminalServer : IDisposable
     {
         if (_handle is null)
         {
-            throw new ObjectDisposedException(nameof(_handle));
+            throw new ObjectDisposedException(nameof(TerminalServer));
         }
     }
 
@@ -320,7 +319,6 @@ public sealed class TerminalServer : IDisposable
     /// <exception cref="IOException"/>
     /// <exception cref="UnauthorizedAccessException"/>
     /// <exception cref="Win32Exception"/>
-    [SuppressMessage("csharp", "IDE0066")]
     private static void ThrowWin32Error()
     {
 #if NET6_0_OR_GREATER
@@ -329,6 +327,7 @@ public sealed class TerminalServer : IDisposable
         int error = Marshal.GetLastWin32Error();
 #endif
 
+#pragma warning disable IDE0066
         switch (error)
         {
             case Errors.ERROR_FILE_NOT_FOUND:
@@ -341,5 +340,6 @@ public sealed class TerminalServer : IDisposable
             default:
                 throw new Win32Exception(error);
         }
+#pragma warning restore IDE0066
     }
 }
