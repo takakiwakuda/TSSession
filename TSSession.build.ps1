@@ -16,7 +16,7 @@ param (
 )
 
 if ($Framework.Length -eq 0) {
-    $Framework = if ($PSEdition -eq "Core") { "net7.0" }else { "net462" }
+    $Framework = if ($PSEdition -eq "Core") { "net7.0" } else { "net462" }
 }
 
 <#
@@ -24,7 +24,9 @@ if ($Framework.Length -eq 0) {
     Build TSSession assembly.
 #>
 task BuildTSSession @{
-    Inputs  = Get-ChildItem -Path TSSession\*.cs, TSSession\TSSession.csproj
+    Inputs  = {
+        Get-ChildItem -Path TSSession\*.cs, TSSession\TSSession.csproj
+    }
     Outputs = "TSSession\bin\$Configuration\$Framework\TSSession.dll"
     Jobs    = {
         exec { dotnet publish -c $Configuration -f $Framework TSSession }
@@ -54,31 +56,6 @@ task BuildModule BuildTSSession, {
 
 <#
 .SYNOPSIS
-    Install TSSession module.
-#>
-task Install BuildModule, {
-    $destination = switch ($Framework) {
-        "net7.0" {
-            "$HOME\Documents\PowerShell\Modules"
-        }
-        "net462" {
-            "$HOME\Documents\WindowsPowerShell\Modules"
-        }
-    }
-
-    if (Test-Path -LiteralPath $destination -PathType Container) {
-        if (Test-Path -LiteralPath "$destination\TSSession" -PathType Container) {
-            Remove-Item -LiteralPath "$destination\TSSession" -Recurse
-        }
-    } else {
-        $null = New-Item -Path $destination -ItemType Directory
-    }
-
-    Copy-Item -LiteralPath out\$Configuration\$Framework\TSSession -Destination $destination -Recurse
-}
-
-<#
-.SYNOPSIS
     Run TSSession module tests.
 #>
 task RunModuleTest BuildModule, {
@@ -93,7 +70,7 @@ task RunModuleTest BuildModule, {
         "net7.0" {
             exec { pwsh -nop -c $command }
         }
-        "net462" {
+        default {
             exec { powershell -noprofile -command $command }
         }
     }
