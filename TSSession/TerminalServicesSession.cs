@@ -164,6 +164,7 @@ public sealed class TerminalServicesSession
         _serverName = serverName;
         _sessionId = sessionId != Wtsapi32.WTS_CURRENT_SESSION ? sessionId : sessionInfo.SessionId;
         _sessionInfo = sessionInfo;
+        _sessionInfoUpdated = true;
         _isRemoteSession = remote;
     }
 
@@ -177,6 +178,7 @@ public sealed class TerminalServicesSession
     {
         _serverName = server.Name;
         _sessionInfo = server.GetSessionInformation(sessionId);
+        _sessionInfoUpdated = true;
         _sessionId = sessionId != Wtsapi32.WTS_CURRENT_SESSION ? sessionId : _sessionInfo.SessionId;
         _isRemoteSession = server.IsRemoteServer;
     }
