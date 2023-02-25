@@ -12,7 +12,7 @@ namespace TSSession;
 /// </summary>
 public sealed class TerminalServer : IDisposable
 {
-    private static readonly Lazy<TerminalServer> s_current = new(() => new());
+    private static readonly Lazy<TerminalServer> s_current = new(() => new TerminalServer());
 
     /// <summary>
     /// Gets a <see cref="TerminalServer"/> object that represents the server running the application.
@@ -49,6 +49,11 @@ public sealed class TerminalServer : IDisposable
             return _serverName;
         }
     }
+
+    /// <summary>
+    /// Gets a value that indicates whether the server is a remote machine.
+    /// </summary>
+    internal bool IsRemoteServer => _isRemoteServer;
 
     private readonly bool _isRemoteServer;
     private readonly string _serverName;
@@ -152,8 +157,7 @@ public sealed class TerminalServer : IDisposable
     public TerminalServicesSession GetSession(int sessionId)
     {
         ThrowIfDisposed();
-
-        return new(_serverName, _isRemoteServer, GetSessionInformation(sessionId));
+        return new TerminalServicesSession(sessionId, this);
     }
 
     /// <summary>
@@ -189,7 +193,7 @@ public sealed class TerminalServer : IDisposable
             for (int i = 0; i < count; i++)
             {
                 sessionInfo = Marshal.PtrToStructure<Wtsapi32.WTS_SESSION_INFO_1>(current);
-                sessions.Add(new(_serverName, _isRemoteServer, GetSessionInformation(sessionInfo.SessionId)));
+                sessions.Add(new TerminalServicesSession(sessionInfo.SessionId, this));
                 current += size;
             }
         }
@@ -259,10 +263,8 @@ public sealed class TerminalServer : IDisposable
     /// <exception cref="Win32Exception">
     /// An error occurred in Windows API.
     /// </exception>
-    private Wtsapi32.WTSINFO GetSessionInformation(int sessionId)
-    {
-        return QuerySessionInformation<Wtsapi32.WTSINFO>(sessionId, Wtsapi32.WTS_INFO_CLASS.WTSSessionInfo);
-    }
+    internal Wtsapi32.WTSINFO GetSessionInformation(int sessionId) =>
+        QuerySessionInformation<Wtsapi32.WTSINFO>(sessionId, Wtsapi32.WTS_INFO_CLASS.WTSSessionInfo);
 
     /// <summary>
     /// Retrieves session information for the specified session identifier.

@@ -1,7 +1,7 @@
 ﻿namespace TSSession;
 
 /// <summary>
-/// ProvIDes string resources.
+/// Provides string resources.
 /// </summary>
 internal static class StringResources
 {

@@ -15,63 +15,137 @@ public sealed class TerminalServicesSession
     /// <summary>
     /// Gets the session connection date and time.
     /// </summary>
-    public DateTime? ConnectTime { get; }
+    public DateTime? ConnectTime
+    {
+        get
+        {
+            UpdateSessionInformation();
+            return FileTimeToDateTime(_sessionInfo.ConnectTime);
+        }
+    }
 
     /// <summary>
     /// Gets the last session disconnection date and time.
     /// </summary>
-    public DateTime? DisconnectTime { get; }
+    public DateTime? DisconnectTime
+    {
+        get
+        {
+            UpdateSessionInformation();
+            return FileTimeToDateTime(_sessionInfo.DisconnectTime);
+        }
+    }
 
     /// <summary>
     /// Gets the domain name of the user logged on to the session.
     /// </summary>
-    public string? DomainName { get; }
+    public string? DomainName
+    {
+        get
+        {
+            UpdateSessionInformation();
+            return _sessionInfo.Domain;
+        }
+    }
 
     /// <summary>
     /// Gets the session idle time.
     /// </summary>
-    public TimeSpan IdleTime { get; }
+    public TimeSpan IdleTime
+    {
+        get
+        {
+            UpdateSessionInformation();
+
+            if (_sessionInfo.LastInputTime == 0)
+            {
+                return TimeSpan.Zero;
+            }
+            return new TimeSpan(_sessionInfo.CurrentTime - _sessionInfo.LastInputTime);
+        }
+    }
 
     /// <summary>
     /// Gets the date and time of the last user input in the session.
     /// </summary>
-    public DateTime? LastInputTime { get; }
+    public DateTime? LastInputTime
+    {
+        get
+        {
+            UpdateSessionInformation();
+            return FileTimeToDateTime(_sessionInfo.LastInputTime);
+        }
+    }
 
     /// <summary>
     /// Gets the date and time that the user logged on to the session.
     /// </summary>
-    public DateTime? LogonTime { get; }
+    public DateTime? LogonTime
+    {
+        get
+        {
+            UpdateSessionInformation();
+            return FileTimeToDateTime(_sessionInfo.LogonTime);
+        }
+    }
 
     /// <summary>
     /// Gets the name of the server hosting the session.
     /// </summary>
-    public string ServerName { get; }
+    public string ServerName => _serverName;
 
     /// <summary>
     /// Gets the session identifier.
     /// </summary>
-    public int SessionId { get; }
+    public int SessionId => _sessionId;
 
     /// <summary>
     /// Gets the name of the session.
     /// </summary>
-    public string SessionName { get; }
+    public string SessionName
+    {
+        get
+        {
+            UpdateSessionInformation();
+            return _sessionInfo.WinStationName;
+        }
+    }
 
     /// <summary>
     /// Gets the state of the session.
     /// </summary>
-    public SessionState SessionState { get; }
+    public SessionState SessionState
+    {
+        get
+        {
+            UpdateSessionInformation();
+            return (SessionState)_sessionInfo.State;
+        }
+    }
 
     /// <summary>
     /// Gets the name of the user logged on to the session.
     /// </summary>
-    public string? UserName { get; }
+    public string? UserName
+    {
+        get
+        {
+            UpdateSessionInformation();
+            return _sessionInfo.UserName;
+        }
+    }
 
     private readonly bool _isRemoteSession;
+    private readonly int _sessionId;
+    private readonly string _serverName;
+    private Wtsapi32.WTSINFO _sessionInfo;
+    private bool _sessionInfoUpdated;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="TerminalServicesSession"/> class.
+    /// Initializes a new instance of the <see cref="TerminalServicesSession"/> class
+    /// with the specified session ID, server name, value indicating the remote session, and session information.
     /// </summary>
+    /// <param name="sessionId">The session identifier of a RD Services session.</param>
     /// <param name="serverName">The name of the server hosting the session.</param>
     /// <param name="remote">
     /// A value that indicates the <paramref name="sessionInfo"/> parameter is a remote session.
@@ -80,41 +154,43 @@ public sealed class TerminalServicesSession
     /// <exception cref="ArgumentNullException">
     /// <paramref name="serverName"/> is <see langword="null"/>.
     /// </exception>
-    internal TerminalServicesSession(string serverName, bool remote, Wtsapi32.WTSINFO sessionInfo)
+    internal TerminalServicesSession(int sessionId, string serverName, bool remote, Wtsapi32.WTSINFO sessionInfo)
     {
         if (serverName is null)
         {
             throw new ArgumentNullException(nameof(serverName));
         }
 
-        ServerName = serverName;
-        DomainName = sessionInfo.Domain;
-        SessionId = sessionInfo.SessionId;
-        SessionName = sessionInfo.WinStationName;
-        SessionState = (SessionState)sessionInfo.State;
-        UserName = sessionInfo.UserName;
-
-        ConnectTime = FileTimeToDateTime(sessionInfo.ConnectTime);
-        DisconnectTime = FileTimeToDateTime(sessionInfo.DisconnectTime);
-        LogonTime = FileTimeToDateTime(sessionInfo.LogonTime);
-
-        if (sessionInfo.LastInputTime > 0)
-        {
-            LastInputTime = DateTime.FromFileTime(sessionInfo.LastInputTime);
-            IdleTime = DateTime.FromFileTime(sessionInfo.CurrentTime) - LastInputTime.Value;
-        }
-
+        _serverName = serverName;
+        _sessionId = sessionId != Wtsapi32.WTS_CURRENT_SESSION ? sessionId : sessionInfo.SessionId;
+        _sessionInfo = sessionInfo;
         _isRemoteSession = remote;
     }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TerminalServicesSession"/> class
+    /// with the specified session ID and terminal server.
+    /// </summary>
+    /// <param name="sessionId">The session identifier of a RD Services session.</param>
+    /// <param name="server">The terminal server being opened.</param>
+    internal TerminalServicesSession(int sessionId, TerminalServer server)
+    {
+        _serverName = server.Name;
+        _sessionInfo = server.GetSessionInformation(sessionId);
+        _sessionId = sessionId != Wtsapi32.WTS_CURRENT_SESSION ? sessionId : _sessionInfo.SessionId;
+        _isRemoteSession = server.IsRemoteServer;
+    }
+
+    /// <summary>
+    /// Refreshes property values by resetting the properties to their current values.
+    /// </summary>
+    public void Refresh() => _sessionInfoUpdated = false;
 
     /// <summary>
     /// Returns a string representing the session name.
     /// </summary>
     /// <returns>A string representing the session name.</returns>
-    public override string ToString()
-    {
-        return SessionName;
-    }
+    public override string ToString() => SessionName;
 
     /// <summary>
     /// Gets a <see cref="TerminalServer"/> object representing the server hosting the session.
@@ -122,21 +198,22 @@ public sealed class TerminalServicesSession
     /// <returns>
     /// A <see cref="TerminalServer"/> object representing the server hosting the session.
     /// </returns>
-    internal TerminalServer GetHostServer()
-    {
-        return _isRemoteSession ? new(ServerName) : TerminalServer.Current;
-    }
+    internal TerminalServer GetHostServer() => _isRemoteSession ? new(ServerName) : TerminalServer.Current;
 
-    /// <summary>
-    /// Converts the specified Windows file time to an equivalent local time.
-    /// </summary>
-    /// <param name="fileTime">A Windows file time expressed in ticks.</param>
-    /// <returns>
-    /// <see langword="null"/> if the <paramref name="fileTime"/> parameter is zero;
-    /// otherwise, <see cref="DateTime"/> object.
-    /// </returns>
     private static DateTime? FileTimeToDateTime(long fileTime)
+        => fileTime == 0 ? null : DateTime.FromFileTime(fileTime);
+
+    private void UpdateSessionInformation()
     {
-        return fileTime == 0 ? null : DateTime.FromFileTime(fileTime);
+        if (_sessionInfoUpdated)
+        {
+            return;
+        }
+
+        using (TerminalServer server = GetHostServer())
+        {
+            _sessionInfo = server.GetSessionInformation(_sessionId);
+        }
+        _sessionInfoUpdated = true;
     }
 }
