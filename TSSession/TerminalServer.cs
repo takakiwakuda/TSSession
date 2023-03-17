@@ -311,7 +311,7 @@ public sealed class TerminalServer : IDisposable
     {
         if (_handle is null)
         {
-            throw new ObjectDisposedException(nameof(TerminalServer));
+            throw new ObjectDisposedException(typeof(TerminalServer).FullName);
         }
     }
 
