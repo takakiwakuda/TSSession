@@ -24,7 +24,7 @@ public sealed class TerminalServer : IDisposable
     /// that the current <see cref="TerminalServer"/> object encapsulates.
     /// </summary>
     /// <exception cref="ObjectDisposedException">
-    /// The server object has already been dispoased.
+    /// The server object has already been disposed.
     /// </exception>
     public SafeTerminalServerHandle Handle
     {
@@ -39,7 +39,7 @@ public sealed class TerminalServer : IDisposable
     /// Retrieves the name of the server.
     /// </summary>
     /// <exception cref="ObjectDisposedException">
-    /// The server object has already been dispoased.
+    /// The server object has already been disposed.
     /// </exception>
     public string Name
     {
@@ -107,7 +107,7 @@ public sealed class TerminalServer : IDisposable
     /// <paramref name="sessionId"/> cannot be found.
     /// </exception>
     /// <exception cref="ObjectDisposedException">
-    /// The server object has already been dispoased.
+    /// The server object has already been disposed.
     /// </exception>
     /// <exception cref="UnauthorizedAccessException">
     /// The caller does not have the required permission.
@@ -146,7 +146,7 @@ public sealed class TerminalServer : IDisposable
     /// <paramref name="sessionId"/> cannot be found.
     /// </exception>
     /// <exception cref="ObjectDisposedException">
-    /// The server object has already been dispoased.
+    /// The server object has already been disposed.
     /// </exception>
     /// <exception cref="UnauthorizedAccessException">
     /// The caller does not have the required permission.
@@ -165,7 +165,7 @@ public sealed class TerminalServer : IDisposable
     /// </summary>
     /// <returns>An array of <see cref="TerminalServicesSession"/> objects.</returns>
     /// <exception cref="ObjectDisposedException">
-    /// The server object has already been dispoased.
+    /// The server object has already been disposed.
     /// </exception>
     /// <exception cref="UnauthorizedAccessException">
     /// The caller does not have the required permission.
@@ -216,7 +216,7 @@ public sealed class TerminalServer : IDisposable
     /// <paramref name="sessionId"/> cannot be found.
     /// </exception>
     /// <exception cref="ObjectDisposedException">
-    /// The server object has already been dispoased.
+    /// The server object has already been disposed.
     /// </exception>
     /// <exception cref="UnauthorizedAccessException">
     /// The caller does not have the required permission.
@@ -239,7 +239,7 @@ public sealed class TerminalServer : IDisposable
     /// </summary>
     /// <returns>A string representing the server name.</returns>
     /// <exception cref="ObjectDisposedException">
-    /// The server object has already been dispoased.
+    /// The server object has already been disposed.
     /// </exception>
     public override string ToString()
     {

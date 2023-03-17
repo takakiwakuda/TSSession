@@ -22,7 +22,7 @@ public sealed class RemoveTSSessionCommand : EndTSSessionCommandBase
 
         try
         {
-            if (Force || ShouldContinue(string.Format(StringResources.LogoffSessionConfirmation, SessionId, server), "Logginng off..."))
+            if (Force || ShouldContinue(string.Format(StringResources.LogoffSessionConfirmation, SessionId, server), "Logging off..."))
             {
                 WriteVerbose(string.Format(StringResources.LogoffSession, SessionId, server));
                 server.LogoffSession(SessionId, true);
